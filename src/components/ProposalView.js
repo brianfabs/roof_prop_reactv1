@@ -85,9 +85,9 @@ function ProposalView() {
         
         <div className="option-content">
           {option.image ? (
-            <img src={option.image} alt={option.title} className="option-image" onError={e => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/400x200?text=No+Image'; }} />
+            <img src={option.image} alt={`${option.title} roofing option`} className="option-image" onError={e => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/400x200?text=No+Image'; }} />
           ) : (
-            <img src="https://via.placeholder.com/400x200?text=No+Image" alt="No Image" className="option-image" />
+            <img src="https://via.placeholder.com/400x200?text=No+Image" alt="Placeholder for missing roofing option" className="option-image" />
           )}
           
           <div className="option-details">

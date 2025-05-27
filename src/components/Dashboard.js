@@ -1,13 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useProposals } from '../hooks/useFirestore';
-import { useAuth } from '../contexts/AuthContext';
 import LoadingSpinner from './LoadingSpinner';
 import Navigation from './Navigation';
 
 function Dashboard() {
   const { proposals, loading, error, deleteProposal } = useProposals();
-  const { currentUser } = useAuth();
 
   const handleDelete = async (id, customerName) => {
     if (window.confirm(`Are you sure you want to delete the proposal for ${customerName}?`)) {
