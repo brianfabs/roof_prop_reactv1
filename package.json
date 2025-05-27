@@ -2,7 +2,7 @@
   "name": "roof-proposal-react",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://brianfabs.github.io/roof_proposal_reactV1",
+  "homepage": "https://brianfabs.github.io/roof_prop_reactv1",
   "proxy": "http://localhost:3000",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
