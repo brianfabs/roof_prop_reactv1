@@ -1,0 +1,254 @@
+/* 
+ * Sales Proposal Tool – “Monarch Money inspired” stylesheet
+ * Swap this file in place of the prior CSS; all variables & selectors are identical.
+ */
+
+/* ==== 1. Root Variables & Base Styles ==== */
+:root {
+  /* Brand palette */
+  --color-primary: #7B61FF;            /* Monarch purple */
+  --color-primary-light: #977dff;      /* lighter purple for hover/focus */
+  --color-secondary: #2ED6A0;          /* teal accent for CTAs */
+  --color-secondary-hover: #25c492;    /* darker teal on hover */
+  --color-success: #2ecc71;            /* success green (unchanged) */
+  --color-danger: #e74c3c;             /* danger red (unchanged) */
+
+  --color-text: #1f2231;               /* deep charcoal body text */
+  --color-text-light: #ffffff;         /* text on dark BGs */
+  --color-bg: #ffffff;                 /* page background */
+  --color-bg-alt: #f5f7fa;             /* light gray section background */
+  --color-border: #e5e9f0;             /* soft gray borders */
+
+  /* Typography */
+  --font-body: "Inter", "Open Sans", Arial, sans-serif;
+  --font-heading: "Inter", "Montserrat", sans-serif;
+  --font-size-base: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-lg: 1.25rem;
+
+  /* Spacing & misc (unchanged) */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2.5rem;
+
+  --radius: 4px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 6px 14px rgba(0, 0, 0, 0.10);
+  --transition: 0.25s ease;
+}
+
+/* GLOBAL RESET & TYPOGRAPHY tweaks – only colors / fonts changed */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  height: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.25;
+}
+h1 { font-size: 2rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p, ul, ol { margin-bottom: var(--spacing-md); }
+a { color: var(--color-primary); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--color-primary-light); text-decoration: underline; }
+
+/* ==== 2. Layout Containers & Grid System ==== */
+.container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-md); }
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--spacing-md); }
+.flex { display: flex; }
+.flex-center { justify-content: center; align-items: center; }
+.flex-between { justify-content: space-between; align-items: center; }
+
+/* ==== 3. NAVBAR ==== */
+.navbar {
+  background: var(--color-bg);
+  color: var(--color-text);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar-brand { font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; color: var(--color-primary); }
+.navbar-nav { list-style: none; display: flex; gap: var(--spacing-md); }
+.navbar-nav a {
+  color: var(--color-text);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius);
+  transition: background var(--transition);
+}
+.navbar-nav a:hover,
+.navbar-nav a.active { background: var(--color-bg-alt); }
+
+/* Mobile nav unchanged */
+.navbar-toggle { display: none; }
+@media (max-width: 768px) {
+  .navbar-toggle { display: block; background: none; border: none; font-size: 1.5rem; color: var(--color-primary); }
+  .navbar-nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--color-bg); flex-direction: column; padding: var(--spacing-md); }
+  .navbar-nav.show { display: flex; }
+}
+
+/* ==== 4. SIDEBAR ==== */
+.sidebar {
+  position: fixed; top: 0; left: 0; height: 100%; width: 220px;
+  background: var(--color-primary);
+  color: var(--color-text-light);
+  padding: var(--spacing-lg) var(--spacing-md);
+  overflow-y: auto;
+  transition: transform var(--transition);
+}
+.sidebar.hidden { transform: translateX(-100%); }
+.sidebar-header { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: var(--spacing-lg); }
+.sidebar nav a {
+  display: block; color: var(--color-text-light);
+  padding: var(--spacing-sm) var(--spacing-xs);
+  border-radius: var(--radius);
+  transition: background var(--transition);
+}
+.sidebar nav a:hover,
+.sidebar nav a.active { background: rgba(255, 255, 255, 0.15); }
+
+.main-content { margin-left: 220px; padding: var(--spacing-lg); }
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); z-index: 200; }
+  .sidebar.show { transform: translateX(0); }
+  .main-content { margin-left: 0; padding: var(--spacing-md); }
+}
+
+/* ==== 5. BUTTONS ==== */
+.btn {
+  display: inline-block;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+/* A subtle purple-to-blue gradient for primary buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #6145ff 100%);
+  color: var(--color-text-light);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, #6d52ff 100%);
+  box-shadow: 0 3px 8px rgba(123, 97, 255, 0.35);
+}
+
+/* Teal-outline secondary button */
+.btn-secondary {
+  background: var(--color-bg);
+  border: 2px solid var(--color-secondary);
+  color: var(--color-secondary);
+}
+.btn-secondary:hover {
+  background: var(--color-secondary);
+  color: var(--color-text-light);
+}
+
+/* Disabled button */
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ==== 6. FORMS ==== */
+.form-group { margin-bottom: var(--spacing-md); }
+.form-group label { display: block; font-weight: 500; margin-bottom: var(--spacing-xs); }
+input[type="text"], input[type="email"], input[type="password"], input[type="number"],
+input[type="tel"], input[type="search"], select, textarea {
+  width: 100%; padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  transition: border var(--transition), box-shadow var(--transition);
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.25);
+  outline: none;
+}
+
+/* Toggle switch identical structure */
+.toggle { position: relative; display: inline-block; width: 42px; height: 22px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: #ccc; border-radius: 22px;
+  cursor: pointer; transition: background var(--transition);
+}
+.toggle-slider:before {
+  content: ""; position: absolute; left: 2px; bottom: 2px;
+  width: 18px; height: 18px; background: var(--color-bg);
+  border-radius: 50%; transition: transform var(--transition);
+}
+.toggle input:checked + .toggle-slider { background: var(--color-success); }
+.toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+/* ==== 7. TABLES ==== */
+table { width: 100%; border-collapse: collapse; margin-bottom: var(--spacing-lg); font-size: 0.95rem; }
+thead th { background: var(--color-bg-alt); padding: 0.75rem; border-bottom: 2px solid var(--color-border); }
+tbody td { padding: 0.75rem; border-bottom: 1px solid var(--color-border); }
+tbody tr:nth-child(even) { background: #f8f9fb; }
+tbody tr:hover { background: #edefff; }
+
+/* ==== 8. CARDS ==== */
+.card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+/* ==== 9. MODALS ==== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55);
+  display: flex; justify-content: center; align-items: center; z-index: 1000;
+}
+.modal-content {
+  background: var(--color-bg);
+  color: var(--color-text);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius);
+  width: 90%; max-width: 520px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* ==== 10. PROPOSAL VIEW ==== */
+.proposal-view {
+  max-width: 860px; margin: 0 auto;
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  background: var(--color-bg);
+}
+.proposal-view h1, .proposal-view h2, .proposal-view h3 { color: var(--color-primary); }
+.proposal-section { margin-bottom: var(--spacing-lg); }
+.proposal-section h3 {
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: var(--spacing-xs); margin-bottom: var(--spacing-sm);
+}
+
+/* Mobile tweak for proposal */
+@media (max-width: 600px) {
+  .proposal-view { padding: var(--spacing-md); }
+}

@@ -1,0 +1,819 @@
+/* 
+ * Sales Proposal Tool - Main Stylesheet 
+ * Modern, professional design inspired by major home service corporations
+ */
+
+/*==== 1. Root Variables & Base Styles ====*/
+
+/* Color palette (modern, trustworthy, professional) */
+:root {
+  --color-primary: #2B5797;    /* Professional blue */
+  --color-primary-light: #4A7BC1; /* Lighter blue for accents */
+  --color-secondary: #FF6B00;  /* Warm orange for CTAs */
+  --color-secondary-hover: #E55C00; /* Darker orange for hover */
+  --color-success: #2E7D32;   /* Success green */
+  --color-danger: #C62828;    /* Error red */
+  --color-text: #2C3E50;      /* Rich dark blue-gray */
+  --color-text-light: #FFFFFF;/* White text */
+  --color-bg: #FFFFFF;        /* Clean white */
+  --color-bg-alt: #F8F9FA;    /* Light gray background */
+  --color-border: #E9ECEF;    /* Subtle border color */
+  --color-accent: #E3F2FD;    /* Light blue accent */
+
+  /* Typography */
+  --font-body: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: "SF Pro Display", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-base: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-lg: 1.25rem;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2.5rem;
+
+  /* Design Elements */
+  --radius: 8px;          /* Softer corners */
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+  --transition: 0.2s ease;
+}
+
+/* Base global styles/reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+body {
+  /* Ensure smooth font rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography & content elements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-text); /* Use primary text color (could use brand color if desired) */
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.2;
+}
+h1 { font-size: 2rem; /* ~32px */ }
+h2 { font-size: 1.75rem; /* ~28px */ }
+h3 { font-size: 1.5rem; /* ~24px */ }
+h4 { font-size: 1.25rem; /* ~20px */ }
+h5 { font-size: 1.1rem; /* ~17.6px */ }
+h6 { font-size: 1rem; /* 16px, base */ }
+
+p, ul, ol {
+  font-family: var(--font-body);
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text);
+}
+ul, ol {
+  padding-left: 1.5rem; /* indent lists */
+}
+ul li, ol li {
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+a:hover, a:focus {
+  color: var(--color-primary-light);
+  text-decoration: underline;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+/* Utility classes for text emphasis */
+.text-muted { color: #777777; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
+
+/*==== 2. Layout Containers & Grid System ====*/
+
+/* Container for overall page content to control width */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Grid utility for dashboard/cards: responsive columns */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-md);
+  align-items: start;
+}
+
+/* Simple flex utility */
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+
+/*==== 3. Navigation Bar (Top) ====*/
+.navbar {
+  background: var(--color-bg); /* white background for clean look */
+  color: var(--color-text);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 100; /* on top of other content */
+}
+.navbar-brand {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-right: var(--spacing-lg);
+}
+.navbar-brand:hover { text-decoration: none; color: var(--color-primary-light); }
+
+.navbar-nav {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  /* For mobile, nav links are hidden by default (controlled via media query or .active class) */
+}
+.navbar-nav a {
+  color: var(--color-text);
+  text-decoration: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: background-color var(--transition), color var(--transition);
+}
+.navbar-nav a:hover {
+  background: var(--color-bg-alt);
+  color: var(--color-primary);
+}
+.navbar-nav a.active {
+  color: var(--color-primary);
+  font-weight: 600;
+  /* Indicate active page with an underline or bottom border */
+  border-bottom: 2px solid var(--color-primary);
+}
+
+/* Navbar CTA button (e.g., Get a Quote) */
+.navbar .btn {
+  margin-left: var(--spacing-md);
+}
+
+/* Mobile menu toggle (hamburger icon placeholder) */
+.navbar-toggle {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: var(--color-text);
+}
+/* Use a simple Unicode or icon font for the hamburger, e.g., three bars */
+.navbar-toggle:before {
+  content: "☰"; /* hamburger icon */
+}
+.navbar-toggle:focus { outline: none; }
+
+/* Show toggle on mobile, hide nav links initially */
+@media (max-width: 768px) {
+  .navbar-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-bg);
+    flex-direction: column;
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--color-border);
+  }
+  .navbar-nav.show {
+    display: flex; /* show menu when toggled (e.g., by adding .show class via JS) */
+  }
+  .navbar-nav a {
+    padding: var(--spacing-sm) 0;
+  }
+  .navbar-toggle {
+    display: block;
+  }
+}
+
+/*==== 4. Sidebar (Dashboard Navigation) ====*/
+.sidebar {
+  /* Sidebar for dashboard/admin navigation */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 220px;
+  background: var(--color-primary);
+  color: var(--color-text-light);
+  padding: var(--spacing-lg) var(--spacing-md);
+  overflow-y: auto;
+  transition: transform var(--transition);
+  /* By default, sidebar is shown (for desktop). On mobile, we might hide it by moving off-screen. */
+}
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+.sidebar .sidebar-header {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+}
+.sidebar .sidebar-header a {
+  color: var(--color-text-light);
+  text-decoration: none;
+}
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+}
+.sidebar nav li {
+  margin-bottom: var(--spacing-sm);
+}
+.sidebar nav a {
+  display: block;
+  color: var(--color-text-light);
+  text-decoration: none;
+  padding: var(--spacing-sm) var(--spacing-xs);
+  border-radius: var(--radius);
+  transition: background-color var(--transition);
+}
+.sidebar nav a:hover {
+  background: rgba(255,255,255,0.1);
+}
+.sidebar nav a.active {
+  background: rgba(255,255,255,0.2);
+  font-weight: 600;
+}
+
+/* Main content area (when sidebar is present, offset it) */
+.main-content {
+  margin-left: 220px;
+  padding: var(--spacing-lg);
+}
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: var(--spacing-md);
+  }
+  .sidebar {
+    /* Hide sidebar off-canvas on small screens by default */
+    transform: translateX(-100%);
+    position: fixed;
+    z-index: 200;
+  }
+  .sidebar.show {
+    transform: translateX(0);
+  }
+}
+
+/*==== 5. Buttons ====*/
+.btn {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color var(--transition), color var(--transition), box-shadow var(--transition);
+}
+
+/* Primary button – main calls to action (e.g., "Get a Quote", "Start Now") */
+.btn-primary {
+  background: var(--color-secondary);   /* vibrant orange background */
+  color: var(--color-text-light);      /* white text */
+}
+.btn-primary:hover {
+  background: var(--color-secondary-hover);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+/* Secondary button – alternate actions (less emphasized) */
+.btn-secondary {
+  background: var(--color-bg);         /* white or light background */
+  color: var(--color-primary);         /* primary color text */
+  border: 2px solid var(--color-primary);
+}
+.btn-secondary:hover {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+}
+
+/* Danger button – destructive actions (e.g., delete) */
+.btn-danger {
+  background: #dc3545;                 /* red background */
+  color: var(--color-text-light);      /* white text */
+}
+.btn-danger:hover {
+  background: #c82333;                 /* darker red on hover */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Disabled state for buttons */
+.btn:disabled, .btn.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: var(--color-border);
+  color: #888888;
+}
+
+/* Button size modifiers */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+}
+
+/*==== 6. Forms (inputs, selects, textareas, toggles) ====*/
+
+/* Form wrapper spacing */
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text);
+}
+
+/* Text inputs, select dropdowns, textarea styles */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+  display: block;
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+input::placeholder, textarea::placeholder {
+  color: #999999;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  /* Add a subtle focus shadow using primary color */
+  box-shadow: 0 0 0 3px rgba(31,61,122,0.2); /* semi-transparent primary */
+}
+
+/* Inline form elements (e.g., checkboxes, radios) */
+input[type="checkbox"],
+input[type="radio"] {
+  /* Let browser default look for these, just adjust spacing */
+  margin-right: 0.4rem;
+  position: relative;
+  top: 1px;
+}
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Toggle switch (custom checkbox styled as switch) */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 22px;
+}
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-slider {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #cccccc;
+  border-radius: 22px;
+  transition: background-color var(--transition);
+  cursor: pointer;
+}
+.toggle-slider:before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: var(--color-bg);
+  border-radius: 50%;
+  transition: transform var(--transition);
+}
+/* Checked (ON) state */
+.toggle input:checked + .toggle-slider {
+  background-color: var(--color-success);
+}
+.toggle input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+/* Optional: slider shadow or focus styles */
+.toggle input:focus + .toggle-slider {
+  box-shadow: 0 0 2px var(--color-primary);
+}
+
+/*==== 7. Tables & Data Views ====*/
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--spacing-lg);
+  font-size: 0.95rem;
+}
+thead th {
+  text-align: left;
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+  font-weight: 600;
+  padding: 0.75rem;
+  border-bottom: 2px solid var(--color-border);
+}
+tbody td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+/* Alternate row coloring for readability */
+tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+/* Hover highlight for table rows */
+tbody tr:hover {
+  background: #f0f4ff; /* a very light blue highlight (tint of primary) */
+}
+
+/* Table in responsive (wrap in a container for overflow if needed) */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+.table-responsive table {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/*==== 8. Cards ====*/
+.card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.card + .card {
+  margin-top: var(--spacing-md);
+}
+.card-header {
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+.card-content {
+  /* additional wrapper if needed inside card */
+}
+.card:hover {
+  /* Elevate card on hover to emphasize interactivity */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+/* Dashboard specific card styles (e.g., status cards) */
+.card.stats {
+  text-align: center;
+  padding: var(--spacing-lg);
+}
+.card.stats .card-header {
+  font-size: 1.5rem;
+}
+.card.stats .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: var(--spacing-sm) 0;
+}
+.card.stats .stat-label {
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+/*==== 9. Modals ====*/
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: var(--color-bg);
+  color: var(--color-text);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+/* Modal header/title */
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+}
+/* Modal close button (if any, e.g., an X in top corner) */
+.modal-close {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--color-text);
+  cursor: pointer;
+}
+.modal-close:hover { color: var(--color-primary); }
+
+/*==== 10. Proposal View Specific ====*/
+/* Styles for customer-facing proposal page */
+.proposal-view {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius);
+}
+
+.proposal-header {
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+  margin-bottom: var(--spacing-xl);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.proposal-header h1 {
+  font-size: 2.5rem;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-md);
+  font-weight: 700;
+}
+
+.proposal-section {
+  background: var(--color-bg);
+  border-radius: var(--radius);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition);
+}
+
+.proposal-section:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.proposal-section h3 {
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.option-card {
+  background: var(--color-bg);
+  border-radius: var(--radius);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+  transition: all var(--transition);
+}
+
+.option-card:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-md);
+}
+
+.option-header {
+  margin-bottom: var(--spacing-md);
+}
+
+.option-header h3 {
+  color: var(--color-primary);
+  font-size: 1.75rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.option-header h4 {
+  color: var(--color-text);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.option-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--spacing-lg);
+}
+
+.option-image {
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.option-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition);
+}
+
+.option-image img:hover {
+  transform: scale(1.05);
+}
+
+.option-details {
+  padding: var(--spacing-md);
+}
+
+.option-details .description {
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.6;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-md) 0;
+}
+
+.features li {
+  padding: var(--spacing-sm) 0;
+  padding-left: var(--spacing-lg);
+  position: relative;
+  color: var(--color-text);
+}
+
+.features li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--color-success);
+  font-weight: bold;
+}
+
+.warranty {
+  background: var(--color-accent);
+  padding: var(--spacing-md);
+  border-radius: var(--radius);
+  margin-top: var(--spacing-md);
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.financing-section {
+  background: var(--color-bg-alt);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius);
+  margin-top: var(--spacing-xl);
+}
+
+.financing-section h3 {
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.loan-option {
+  background: var(--color-bg);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius);
+  margin-bottom: var(--spacing-md);
+  border: 1px solid var(--color-border);
+}
+
+.loan-option:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.monthly-payment {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin: var(--spacing-sm) 0;
+}
+
+.loan-term {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+.total-price {
+  font-size: 2rem;
+  color: var(--color-primary);
+  font-weight: 700;
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+  padding: var(--spacing-lg);
+  background: var(--color-accent);
+  border-radius: var(--radius);
+}
+
+@media (max-width: 768px) {
+  .proposal-view {
+    padding: var(--spacing-md);
+  }
+  
+  .option-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .option-image {
+    max-height: 200px;
+  }
+  
+  .proposal-section {
+    padding: var(--spacing-lg);
+  }
+}
+
+.company-logo {
+    max-height: 80px;
+    max-width: 200px;
+    width: auto;
+    height: auto;
+    margin-bottom: var(--spacing-lg);
+    filter: drop-shadow(var(--shadow-sm));
+    object-fit: contain;
+}
+
+/* Specific styling for logo in navbar */
+.navbar-brand .company-logo {
+    margin-bottom: 0;
+    max-height: 40px;
+    max-width: 120px;
+}
+
+/* Specific styling for logo in login page */
+.login-container .company-logo {
+    max-height: 80px;
+    max-width: 200px;
+    margin: 0 auto var(--spacing-lg);
+}
+
+/* Specific styling for logo in proposal page */
+.proposal-header .company-logo {
+    max-height: 80px;
+    max-width: 200px;
+    margin: 0 auto var(--spacing-lg);
+}

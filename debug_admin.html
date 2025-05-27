@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Debug - Global Roofing</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">Global Roofing</a>
+        <ul class="navbar-nav">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="create_proposal.html">Create Proposal</a></li>
+            <li><a href="admin.html" id="nav-admin" class="active">Admin</a></li>
+        </ul>
+        <div>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-content">
+            <h1>Admin Debug Page</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Authentication Debug</h2>
+                </div>
+                
+                <div id="debug-info" style="font-family: monospace; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                    <p>Loading debug information...</p>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="runDebugTests()">Run Debug Tests</button>
+                    <button class="btn btn-secondary" onclick="clearDebugInfo()">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        const usersCol = firebase.firestore().collection('users');
+        
+        function log(message) {
+            const debugInfo = document.getElementById('debug-info');
+            const timestamp = new Date().toLocaleTimeString();
+            debugInfo.innerHTML += `[${timestamp}] ${message}<br>`;
+        }
+        
+        function clearDebugInfo() {
+            document.getElementById('debug-info').innerHTML = '';
+        }
+        
+        async function runDebugTests() {
+            clearDebugInfo();
+            log('Starting debug tests...');
+            
+            // Check localStorage
+            const user = localStorage.getItem('loggedInUser');
+            log(`Current user in localStorage: ${user}`);
+            
+            if (!user) {
+                log('ERROR: No user found in localStorage');
+                return;
+            }
+            
+            try {
+                // Check Firebase connection
+                log('Testing Firebase connection...');
+                if (typeof firebase === 'undefined') {
+                    log('ERROR: Firebase not loaded');
+                    return;
+                }
+                log('✓ Firebase loaded');
+                
+                // Check Firestore
+                const db = firebase.firestore();
+                log('✓ Firestore initialized');
+                
+                // Check user document
+                log(`Querying user document for: ${user}`);
+                const userDoc = await usersCol.doc(user).get();
+                log(`User document exists: ${userDoc.exists}`);
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    log(`User data: ${JSON.stringify(userData, null, 2)}`);
+                    log(`User role: ${userData.role}`);
+                    
+                    if (userData.role === 'admin') {
+                        log('✓ User is admin - access should be granted');
+                    } else {
+                        log('✗ User is not admin - access denied');
+                    }
+                } else {
+                    log('✗ User document does not exist');
+                }
+                
+            } catch (error) {
+                log(`ERROR: ${error.message}`);
+                log(`Error code: ${error.code}`);
+                log(`Stack trace: ${error.stack}`);
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        }
+        
+        // Auto-run debug tests on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(runDebugTests, 1000);
+        });
+    </script>
+</body>
+</html> 

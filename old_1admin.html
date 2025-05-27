@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manage Roofing Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .admin-content {
+            padding: 30px;
+        }
+        .option-section {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            margin: 20px 0;
+            padding: 25px;
+        }
+        .option-section.good {
+            border-color: #28a745;
+        }
+        .option-section.better {
+            border-color: #ffc107;
+        }
+        .option-section.best {
+            border-color: #dc3545;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            color: white;
+        }
+        .section-title.good {
+            background: #28a745;
+        }
+        .section-title.better {
+            background: #ffc107;
+            color: #212529;
+        }
+        .section-title.best {
+            background: #dc3545;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .save-button {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        .save-button:hover {
+            opacity: 0.9;
+        }
+        .save-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .navigation {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            text-align: center;
+        }
+        .nav-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            margin: 0 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .status-message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+            display: none;
+        }
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #6c757d;
+        }
+        .access-denied {
+            text-align: center;
+            padding: 50px;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Admin Panel</h1>
+            <p>Manage Roofing Options Content</p>
+        </div>
+        
+        <div id="loading" class="loading">
+            <h3>Loading admin panel...</h3>
+        </div>
+        
+        <div id="access-denied" class="access-denied" style="display: none;">
+            <h3>Access Denied</h3>
+            <p>You don't have permission to access this page.</p>
+            <p>Contact an administrator to request access.</p>
+        </div>
+        
+        <div id="admin-content" class="admin-content" style="display: none;">
+            <div id="status-message" class="status-message"></div>
+            
+            <!-- Good Option -->
+            <div class="option-section good">
+                <div class="section-title good">Standard Quality (Good)</div>
+                <form id="good-form">
+                    <div class="form-group">
+                        <label for="good-title">Title:</label>
+                        <input type="text" id="good-title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="good-description">Description:</label>
+                        <textarea id="good-description" name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="good-warranty">Warranty Information:</label>
+                        <textarea id="good-warranty" name="warranty" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="good-image">Image URL:</label>
+                        <input type="url" id="good-image" name="image" required>
+                    </div>
+                    <button type="submit" class="save-button">Save Standard Quality</button>
+                </form>
+            </div>
+            
+            <!-- Better Option -->
+            <div class="option-section better">
+                <div class="section-title better">Premium Quality (Better)</div>
+                <form id="better-form">
+                    <div class="form-group">
+                        <label for="better-title">Title:</label>
+                        <input type="text" id="better-title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="better-description">Description:</label>
+                        <textarea id="better-description" name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="better-warranty">Warranty Information:</label>
+                        <textarea id="better-warranty" name="warranty" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="better-image">Image URL:</label>
+                        <input type="url" id="better-image" name="image" required>
+                    </div>
+                    <button type="submit" class="save-button">Save Premium Quality</button>
+                </form>
+            </div>
+            
+            <!-- Best Option -->
+            <div class="option-section best">
+                <div class="section-title best">Elite Quality (Best)</div>
+                <form id="best-form">
+                    <div class="form-group">
+                        <label for="best-title">Title:</label>
+                        <input type="text" id="best-title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="best-description">Description:</label>
+                        <textarea id="best-description" name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="best-warranty">Warranty Information:</label>
+                        <textarea id="best-warranty" name="warranty" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="best-image">Image URL:</label>
+                        <input type="url" id="best-image" name="image" required>
+                    </div>
+                    <button type="submit" class="save-button">Save Elite Quality</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="dashboard.html" class="nav-button">Back to Dashboard</a>
+            <a href="proposal.html" class="nav-button">View Sample Proposal</a>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

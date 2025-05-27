@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Proposal - Global Roofing</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">
+            <img src="https://getglobalroofing.com/wp-content/uploads/2025/05/Logo512.png" alt="Global Roofing" class="company-logo">
+        </a>
+        <ul class="navbar-nav">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="create_proposal.html" class="active">Create Proposal</a></li>
+            <li><a href="admin.html" id="nav-admin" style="display: none;">Admin</a></li>
+        </ul>
+        <div>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="flex-center" style="min-height: 70vh;">
+                <div class="card" style="width: 100%; max-width: 600px;">
+                    <div class="card-header">
+                        <h1>Create New Proposal</h1>
+                        <p class="text-muted">Enter customer information to generate a roofing proposal</p>
+                    </div>
+
+                    <form onsubmit="addProposal(event)">
+                        <div class="form-group">
+                            <label for="customer-name">Customer Name *</label>
+                            <input type="text" id="customer-name" required placeholder="John Smith">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="customer-address">Property Address *</label>
+                            <input type="text" id="customer-address" required placeholder="123 Main St, City, State 12345">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="total-squares">Total Squares *</label>
+                            <input type="number" id="total-squares" min="0" step="0.1" required placeholder="25.5">
+                            <small class="text-muted">Total square footage of roofing area</small>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Proposal</button>
+                        
+                        <div id="proposal-error" style="color: var(--color-danger); margin-top: var(--spacing-md); display: none;"></div>
+                    </form>
+
+                    <!-- Debug Section -->
+                    <div style="margin-top: var(--spacing-xl); padding-top: var(--spacing-lg); border-top: 1px solid var(--color-border);">
+                        <h4>Debug Tools</h4>
+                        <div style="display: flex; gap: var(--spacing-sm); flex-wrap: wrap;">
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="testFirebaseConnection()">Test Firebase</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="debugEnvironment()">Debug Environment</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="console.clear()">Clear Console</button>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center" style="margin-top: var(--spacing-lg);">
+                        <a href="dashboard.html">← Back to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="create_proposal.js"></script>
+    
+    <script>
+        // Function to check user role and show/hide admin link
+        async function checkUserRoleForNav() {
+            try {
+                const currentUser = localStorage.getItem('loggedInUser');
+                if (!currentUser) return;
+                
+                const usersCol = firebase.firestore().collection('users');
+                const userDoc = await usersCol.doc(currentUser).get();
+                
+                if (userDoc.exists && userDoc.data().role === 'admin') {
+                    const adminLink = document.getElementById('nav-admin');
+                    if (adminLink) {
+                        adminLink.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking user role for navigation:', error);
+            }
+        }
+        
+        // Global logout function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        }
+        
+        // Check admin role when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(checkUserRoleForNav, 1000);
+        });
+    </script>
+</body>
+</html>

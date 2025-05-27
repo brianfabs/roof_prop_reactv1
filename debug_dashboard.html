@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Debug - Global Roofing</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">Global Roofing</a>
+        <ul class="navbar-nav">
+            <li><a href="dashboard.html" class="active">Dashboard</a></li>
+            <li><a href="create_proposal.html">Create Proposal</a></li>
+            <li><a href="admin.html" id="nav-admin" style="display: none;">Admin</a></li>
+        </ul>
+        <div>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-content">
+            <h1>Dashboard Debug</h1>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Button Test</h2>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <p>Test edit proposal button (replace PROPOSAL_ID with actual ID):</p>
+                    <a href="edit_proposal.html?id=test123" class="btn btn-sm btn-secondary">Test Edit Button</a>
+                    <a href="proposal.html?id=test123" class="btn btn-sm btn-primary" style="margin-left: 10px;">Test View Button</a>
+                </div>
+                
+                <div id="debug-info" style="font-family: monospace; background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <p>Debug information will appear here...</p>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <button class="btn btn-primary" onclick="testButtons()">Test Button Generation</button>
+                    <button class="btn btn-secondary" onclick="clearDebug()">Clear</button>
+                </div>
+            </div>
+
+            <!-- Test Proposals Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Test Proposals</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="proposals-table">
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Address</th>
+                                <th>Squares</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="test-proposals-tbody">
+                            <!-- Test content will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        function log(message) {
+            const debugInfo = document.getElementById('debug-info');
+            const timestamp = new Date().toLocaleTimeString();
+            debugInfo.innerHTML += `[${timestamp}] ${message}<br>`;
+        }
+        
+        function clearDebug() {
+            document.getElementById('debug-info').innerHTML = '';
+        }
+        
+        function testButtons() {
+            clearDebug();
+            log('Testing button generation...');
+            
+            // Create test proposals
+            const testProposals = [
+                {
+                    id: 'test1',
+                    customerName: 'John Doe',
+                    address: '123 Main St',
+                    squares: 25,
+                    createdAt: new Date()
+                },
+                {
+                    id: 'test2',
+                    customerName: 'Jane Smith',
+                    address: '456 Oak Ave',
+                    squares: 30,
+                    createdAt: new Date()
+                }
+            ];
+            
+            const tbody = document.getElementById('test-proposals-tbody');
+            tbody.innerHTML = '';
+            
+            testProposals.forEach(proposal => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${proposal.customerName}</td>
+                    <td>${proposal.address}</td>
+                    <td>${proposal.squares}</td>
+                    <td>${proposal.createdAt.toLocaleDateString()}</td>
+                    <td style="white-space: nowrap;">
+                        <a href="proposal.html?id=${proposal.id}" class="btn btn-sm btn-primary" style="margin-right: 5px;">View</a>
+                        <a href="edit_proposal.html?id=${proposal.id}" class="btn btn-sm btn-secondary">Edit</a>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+                log(`Generated buttons for proposal: ${proposal.id}`);
+            });
+            
+            log('Button generation complete. Check if buttons are clickable.');
+        }
+        
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        }
+        
+        // Check user role and show admin link
+        async function checkUserRoleForNav() {
+            try {
+                const currentUser = localStorage.getItem('loggedInUser');
+                if (!currentUser) return;
+                
+                const usersCol = firebase.firestore().collection('users');
+                const userDoc = await usersCol.doc(currentUser).get();
+                
+                if (userDoc.exists && userDoc.data().role === 'admin') {
+                    const adminLink = document.getElementById('nav-admin');
+                    if (adminLink) {
+                        adminLink.style.display = 'block';
+                        log('Admin link shown in navigation');
+                    }
+                }
+            } catch (error) {
+                log(`Error checking user role: ${error.message}`);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                checkUserRoleForNav();
+                testButtons();
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 

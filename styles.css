@@ -1,0 +1,132 @@
+/* Roofing Options Section */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.option-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+}
+
+.option-card.featured {
+    border: 2px solid #4CAF50;
+    position: relative;
+}
+
+.option-card.featured::before {
+    content: 'Featured';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #4CAF50;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.option-header {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.option-header h3 {
+    color: #4CAF50;
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.option-header h4 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin: 0.5rem 0 0;
+    font-weight: 700;
+}
+
+.option-content {
+    padding: 1.5rem;
+}
+
+.option-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.option-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.option-details {
+    color: #2c3e50;
+}
+
+.option-details .description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+}
+
+.features li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.features li::before {
+    content: '✓';
+    color: #4CAF50;
+    margin-right: 0.5rem;
+    font-weight: bold;
+}
+
+.warranty {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .option-card {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+} 

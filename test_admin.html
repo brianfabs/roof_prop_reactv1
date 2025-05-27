@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .debug-output { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 3px; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Admin Debug Test</h1>
+    
+    <div class="debug-section">
+        <h3>Local Storage Check</h3>
+        <button onclick="checkLocalStorage()">Check Local Storage</button>
+        <div id="localStorage-output" class="debug-output"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Firebase Connection</h3>
+        <button onclick="testFirebase()">Test Firebase</button>
+        <div id="firebase-output" class="debug-output"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>User Document Check</h3>
+        <button onclick="checkUserDoc()">Check User Document</button>
+        <div id="user-output" class="debug-output"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Set Admin User</h3>
+        <input type="email" id="admin-email" placeholder="Enter admin email">
+        <button onclick="setAdminUser()">Set as Admin</button>
+        <div id="admin-output" class="debug-output"></div>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <script>
+        function checkLocalStorage() {
+            const output = document.getElementById('localStorage-output');
+            const user = localStorage.getItem('loggedInUser');
+            output.innerHTML = `
+                <strong>Logged in user:</strong> ${user || 'None'}<br>
+                <strong>All localStorage items:</strong><br>
+                ${Object.keys(localStorage).map(key => `${key}: ${localStorage.getItem(key)}`).join('<br>')}
+            `;
+        }
+
+        async function testFirebase() {
+            const output = document.getElementById('firebase-output');
+            try {
+                if (typeof firebase === 'undefined') {
+                    throw new Error('Firebase not loaded');
+                }
+                
+                const db = firebase.firestore();
+                const testDoc = await db.collection('test').limit(1).get();
+                
+                output.innerHTML = `
+                    <strong>Firebase Status:</strong> ✅ Connected<br>
+                    <strong>Firestore:</strong> ✅ Working<br>
+                    <strong>Test Query:</strong> ✅ Success
+                `;
+            } catch (error) {
+                output.innerHTML = `
+                    <strong>Firebase Status:</strong> ❌ Error<br>
+                    <strong>Error:</strong> ${error.message}
+                `;
+            }
+        }
+
+        async function checkUserDoc() {
+            const output = document.getElementById('user-output');
+            const user = localStorage.getItem('loggedInUser');
+            
+            if (!user) {
+                output.innerHTML = '<strong>No user in localStorage</strong>';
+                return;
+            }
+
+            try {
+                const db = firebase.firestore();
+                const userDoc = await db.collection('users').doc(user.toLowerCase()).get();
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    output.innerHTML = `
+                        <strong>User Document:</strong> ✅ Found<br>
+                        <strong>Email:</strong> ${userData.email}<br>
+                        <strong>Role:</strong> ${userData.role}<br>
+                        <strong>Created:</strong> ${userData.createdAt ? userData.createdAt.toDate() : 'Unknown'}<br>
+                        <strong>Raw Data:</strong> ${JSON.stringify(userData, null, 2)}
+                    `;
+                } else {
+                    output.innerHTML = `
+                        <strong>User Document:</strong> ❌ Not Found<br>
+                        <strong>Looking for:</strong> ${user.toLowerCase()}
+                    `;
+                }
+            } catch (error) {
+                output.innerHTML = `
+                    <strong>Error:</strong> ${error.message}
+                `;
+            }
+        }
+
+        async function setAdminUser() {
+            const output = document.getElementById('admin-output');
+            const email = document.getElementById('admin-email').value;
+            
+            if (!email) {
+                output.innerHTML = '<strong>Please enter an email</strong>';
+                return;
+            }
+
+            try {
+                const db = firebase.firestore();
+                await db.collection('users').doc(email.toLowerCase()).set({
+                    email: email.toLowerCase(),
+                    role: 'admin',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                output.innerHTML = `
+                    <strong>Success:</strong> ✅ User ${email} set as admin<br>
+                    <button onclick="localStorage.setItem('loggedInUser', '${email.toLowerCase()}'); alert('User set in localStorage')">Set as Current User</button>
+                `;
+            } catch (error) {
+                output.innerHTML = `
+                    <strong>Error:</strong> ${error.message}
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,263 @@
+/* 
+ * Sales Proposal Tool – “Lowe’s inspired” stylesheet
+ * All selectors & custom-property names remain unchanged.
+ * Swap the file and go.
+ */
+
+/* ==== 1. Root Variables & Base Styles ==== */
+:root {
+  /* Brand palette */
+  --color-primary: #004990;            /* Lowe’s corporate blue */
+  --color-primary-light: #0065c0;      /* lighter blue for hovers/focus */
+  --color-secondary: #FFD100;          /* Lowe’s promo yellow for CTAs */
+  --color-secondary-hover: #e5bc00;    /* darker yellow on hover */
+  --color-success: #2e7d32;            /* success green (unchanged) */
+  --color-danger: #c62828;             /* error red (unchanged) */
+
+  --color-text: #2c2c2c;               /* near-black body text */
+  --color-text-light: #ffffff;         /* text on dark BGs */
+  --color-bg: #ffffff;                 /* page background */
+  --color-bg-alt: #f4f6f9;             /* light gray section BG */
+  --color-border: #dfe3e8;             /* soft gray borders */
+
+  /* Typography */
+  --font-body: "Roboto", "Open Sans", Arial, sans-serif;
+  --font-heading: "Roboto Condensed", "Montserrat", sans-serif;
+  --font-size-base: 16px;
+  --font-size-sm: 0.875rem;
+  --font-size-lg: 1.25rem;
+
+  /* Spacing & misc */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2.5rem;
+
+  --radius: 4px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.12);
+  --transition: 0.25s ease;
+}
+
+/* RESET & GLOBALS – unchanged except font family */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  height: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography tweaks */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.25;
+}
+h1 { font-size: 2rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p, ul, ol { margin-bottom: var(--spacing-md); }
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+a:hover { color: var(--color-primary-light); text-decoration: underline; }
+
+/* ==== 2. Layout Containers & Grid System ==== */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--spacing-md);
+}
+.flex { display: flex; }
+.flex-center { justify-content: center; align-items: center; }
+.flex-between { justify-content: space-between; align-items: center; }
+
+/* ==== 3. NAVBAR ==== */
+.navbar {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar-brand {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-light);
+}
+.navbar-nav {
+  list-style: none;
+  display: flex;
+  gap: var(--spacing-md);
+}
+.navbar-nav a {
+  color: var(--color-text-light);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius);
+  transition: background var(--transition);
+}
+.navbar-nav a:hover,
+.navbar-nav a.active {
+  background: var(--color-primary-light);
+}
+.navbar-toggle { display: none; }
+
+/* Mobile nav */
+@media (max-width: 768px) {
+  .navbar-toggle { display: block; background: none; border: none; color: var(--color-text-light); font-size: 1.5rem; }
+  .navbar-nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--color-primary); flex-direction: column; padding: var(--spacing-md); }
+  .navbar-nav.show { display: flex; }
+}
+
+/* ==== 4. SIDEBAR ==== */
+.sidebar {
+  position: fixed; top: 0; left: 0; height: 100%; width: 220px;
+  background: var(--color-primary);
+  color: var(--color-text-light);
+  padding: var(--spacing-lg) var(--spacing-md);
+  overflow-y: auto;
+  transition: transform var(--transition);
+}
+.sidebar.hidden { transform: translateX(-100%); }
+.sidebar-header { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: var(--spacing-lg); }
+.sidebar nav a {
+  display: block; color: var(--color-text-light);
+  padding: var(--spacing-sm) var(--spacing-xs);
+  border-radius: var(--radius);
+  transition: background var(--transition);
+}
+.sidebar nav a:hover,
+.sidebar nav a.active { background: rgba(255, 255, 255, 0.15); }
+
+.main-content { margin-left: 220px; padding: var(--spacing-lg); }
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); z-index: 200; }
+  .sidebar.show { transform: translateX(0); }
+  .main-content { margin-left: 0; padding: var(--spacing-md); }
+}
+
+/* ==== 5. BUTTONS ==== */
+.btn {
+  display: inline-block;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background var(--transition), box-shadow var(--transition);
+}
+.btn-primary {
+  background: var(--color-secondary);
+  color: var(--color-text);
+}
+.btn-primary:hover { background: var(--color-secondary-hover); box-shadow: 0 2px 6px rgba(0,0,0,0.18); }
+
+.btn-secondary {
+  background: var(--color-bg);
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+.btn-secondary:hover {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+}
+
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ==== 6. FORMS ==== */
+.form-group { margin-bottom: var(--spacing-md); }
+.form-group label { display: block; font-weight: 500; margin-bottom: var(--spacing-xs); }
+input[type="text"], input[type="email"], input[type="password"], input[type="number"],
+input[type="tel"], input[type="search"], select, textarea {
+  width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--color-border); border-radius: var(--radius);
+  background: var(--color-bg); transition: border var(--transition), box-shadow var(--transition);
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0,73,144,0.2);
+  outline: none;
+}
+
+/* Toggle switch */
+.toggle { position: relative; display: inline-block; width: 42px; height: 22px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: #ccc;
+  border-radius: 22px; cursor: pointer; transition: background var(--transition);
+}
+.toggle-slider:before {
+  content: ""; position: absolute; left: 2px; bottom: 2px;
+  width: 18px; height: 18px; background: var(--color-bg);
+  border-radius: 50%; transition: transform var(--transition);
+}
+.toggle input:checked + .toggle-slider { background: var(--color-success); }
+.toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+/* ==== 7. TABLES ==== */
+table { width: 100%; border-collapse: collapse; margin-bottom: var(--spacing-lg); font-size: 0.95rem; }
+thead th { background: var(--color-bg-alt); padding: 0.75rem; border-bottom: 2px solid var(--color-border); }
+tbody td { padding: 0.75rem; border-bottom: 1px solid var(--color-border); }
+tbody tr:nth-child(even) { background: #f7f9fc; }
+tbody tr:hover { background: #e9f0ff; }
+
+/* ==== 8. CARDS ==== */
+.card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+/* ==== 9. MODALS ==== */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  display: flex; justify-content: center; align-items: center; z-index: 1000;
+}
+.modal-content {
+  background: var(--color-bg); color: var(--color-text);
+  padding: var(--spacing-lg); border-radius: var(--radius);
+  width: 90%; max-width: 520px; box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+}
+
+/* ==== 10. PROPOSAL VIEW ==== */
+.proposal-view {
+  max-width: 860px; margin: 0 auto;
+  padding: var(--spacing-lg); border: 1px solid var(--color-border);
+  border-radius: var(--radius); box-shadow: var(--shadow-sm);
+  background: var(--color-bg);
+}
+.proposal-view h1, .proposal-view h2, .proposal-view h3 { color: var(--color-primary); }
+.proposal-section { margin-bottom: var(--spacing-lg); }
+.proposal-section h3 {
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: var(--spacing-xs); margin-bottom: var(--spacing-sm);
+}
+
+/* Tiny mobile tweak for proposal */
+@media (max-width: 600px) {
+  .proposal-view { padding: var(--spacing-md); }
+}

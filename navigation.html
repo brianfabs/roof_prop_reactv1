@@ -1,0 +1,66 @@
+<!-- Reusable Navigation Bar -->
+<nav class="navbar">
+    <a href="dashboard.html" class="navbar-brand">Global Roofing</a>
+    <ul class="navbar-nav">
+        <li><a href="dashboard.html" id="nav-dashboard">Dashboard</a></li>
+        <li><a href="create_proposal.html" id="nav-create">Create Proposal</a></li>
+        <li><a href="admin.html" id="nav-admin" style="display: none;">Admin</a></li>
+    </ul>
+    <div>
+        <button class="btn btn-secondary" onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<script>
+// Auto-highlight active nav item based on current page
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = window.location.pathname.split('/').pop();
+    const navItems = {
+        'dashboard.html': 'nav-dashboard',
+        'create_proposal.html': 'nav-create', 
+        'admin.html': 'nav-admin',
+        'loan_admin.html': 'nav-admin',
+        'user-management.html': 'nav-admin',
+        'edit_proposal.html': 'nav-dashboard'
+    };
+    
+    const activeId = navItems[currentPage];
+    if (activeId) {
+        document.getElementById(activeId).classList.add('active');
+    }
+    
+    // Check if user is admin and show admin link
+    checkUserRoleForNav();
+    
+    // Global logout function if not already defined
+    if (typeof window.logout === 'undefined') {
+        window.logout = function() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        };
+    }
+});
+
+// Function to check user role and show/hide admin link
+async function checkUserRoleForNav() {
+    try {
+        const currentUser = localStorage.getItem('loggedInUser');
+        if (!currentUser) return;
+        
+        // Initialize Firebase if not already done
+        if (typeof firebase !== 'undefined' && firebase.firestore) {
+            const usersCol = firebase.firestore().collection('users');
+            const userDoc = await usersCol.doc(currentUser).get();
+            
+            if (userDoc.exists && userDoc.data().role === 'admin') {
+                const adminLink = document.getElementById('nav-admin');
+                if (adminLink) {
+                    adminLink.style.display = 'block';
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error checking user role for navigation:', error);
+    }
+}
+</script>

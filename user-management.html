@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Global Roofing</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">
+            <img src="https://getglobalroofing.com/wp-content/uploads/2025/05/Logo512.png" alt="Global Roofing" class="company-logo">
+        </a>
+        <ul class="navbar-nav">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="create_proposal.html">Create Proposal</a></li>
+            <li><a href="admin.html" id="nav-admin" class="active">Admin</a></li>
+        </ul>
+        <div>
+            <a href="admin.html" class="btn btn-secondary">Back to Admin</a>
+            <button class="btn btn-secondary" onclick="logout()" style="margin-left: 10px;">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-content">
+            <h1>User Management</h1>
+            
+            <!-- Create/Edit User Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 id="form-title">Create New User</h2>
+                </div>
+                
+                <form onsubmit="submitUser(event)">
+                    <div class="form-group">
+                        <label for="new-user-email">Email Address *</label>
+                        <input type="email" id="new-user-email" required placeholder="user@company.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-user-fullname">Full Name *</label>
+                        <input type="text" id="new-user-fullname" required placeholder="John Smith">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-user-password">Password *</label>
+                        <input type="password" id="new-user-password" required placeholder="Minimum 6 characters">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-user-role">User Role</label>
+                        <select id="new-user-role" required>
+                            <option value="user">Standard User</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="submit-btn">Create User</button>
+                    
+                    <div id="user-error" style="color: var(--color-danger); margin-top: var(--spacing-md); display: none;"></div>
+                </form>
+            </div>
+
+            <!-- Existing Users Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Existing Users</h3>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Full Name</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Dynamic content will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="user-management.js"></script>
+    
+    <script>
+        // Global logout function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

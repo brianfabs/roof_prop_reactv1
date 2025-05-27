@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Proposal - Global Roofing</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="dashboard.html" class="navbar-brand">
+            <img src="https://getglobalroofing.com/wp-content/uploads/2025/05/Logo512.png" alt="Global Roofing" class="company-logo">
+        </a>
+        <ul class="navbar-nav">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="create_proposal.html">Create Proposal</a></li>
+            <li><a href="admin.html" id="nav-admin" style="display: none;">Admin</a></li>
+        </ul>
+        <div>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="flex-center" style="min-height: 70vh;">
+                <div class="card" style="width: 100%; max-width: 600px;">
+                    <div class="card-header">
+                        <h1>Edit Proposal</h1>
+                        <p class="text-muted">Update customer information and proposal details</p>
+                    </div>
+
+                    <div id="loading" style="text-align: center; padding: 50px; color: #666;">
+                        Loading proposal...
+                    </div>
+
+                    <div id="edit-form" style="display: none;">
+                        <form onsubmit="updateProposal(event)">
+                            <div class="form-group">
+                                <label for="customer-name">Customer Name *</label>
+                                <input type="text" id="customer-name" required placeholder="John Smith">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="customer-address">Property Address *</label>
+                                <input type="text" id="customer-address" required placeholder="123 Main St, City, State 12345">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="total-squares">Total Squares *</label>
+                                <input type="number" id="total-squares" min="0" step="0.1" required placeholder="25.5">
+                                <small class="text-muted">Total square footage of roofing area</small>
+                            </div>
+                            
+                            <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+                                <button type="submit" class="btn btn-primary" style="flex: 1;">Update Proposal</button>
+                                <button type="button" class="btn btn-secondary" onclick="viewProposal()" style="flex: 1;">View Proposal</button>
+                            </div>
+                            
+                            <div id="proposal-error" style="color: var(--color-danger); margin-top: var(--spacing-md); display: none;"></div>
+                        </form>
+                    </div>
+
+                    <div id="error-container" style="display: none; text-align: center; padding: var(--spacing-xl); color: var(--color-danger);">
+                        <!-- Error messages will be displayed here -->
+                    </div>
+                    
+                    <div class="text-center" style="margin-top: var(--spacing-lg);">
+                        <a href="dashboard.html">← Back to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        const proposalsCol = firebase.firestore().collection('proposals');
+        let currentProposalId = null;
+
+        function getProposalId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        function checkAuth() {
+            const user = localStorage.getItem('loggedInUser');
+            if (!user) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        function displayError(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `<h3>Error</h3><p>${message}</p>`;
+            errorContainer.style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        async function loadProposal() {
+            try {
+                const proposalDoc = await proposalsCol.doc(currentProposalId).get();
+                
+                if (!proposalDoc.exists) {
+                    throw new Error('Proposal not found');
+                }
+                
+                const proposal = proposalDoc.data();
+                
+                // Populate form
+                document.getElementById('customer-name').value = proposal.customerName || '';
+                document.getElementById('customer-address').value = proposal.address || '';
+                document.getElementById('total-squares').value = proposal.squares || '';
+                
+                // Show form, hide loading
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('edit-form').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading proposal:', error);
+                displayError(`Failed to load proposal: ${error.message}`);
+            }
+        }
+
+        async function updateProposal(event) {
+            event.preventDefault();
+            
+            try {
+                const name = document.getElementById('customer-name').value.trim();
+                const address = document.getElementById('customer-address').value.trim();
+                const squares = parseFloat(document.getElementById('total-squares').value);
+                const updatedBy = localStorage.getItem('loggedInUser');
+                
+                if (!name || !address || isNaN(squares)) {
+                    throw new Error('All fields are required and squares must be a valid number.');
+                }
+                
+                const button = event.target.querySelector('button[type="submit"]');
+                const originalText = button.textContent;
+                button.textContent = 'Updating...';
+                button.disabled = true;
+                
+                const updateData = {
+                    customerName: name,
+                    address,
+                    squares,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedBy
+                };
+                
+                await proposalsCol.doc(currentProposalId).update(updateData);
+                
+                // Show success message
+                const errorDiv = document.getElementById('proposal-error');
+                errorDiv.style.color = 'var(--color-success)';
+                errorDiv.textContent = 'Proposal updated successfully!';
+                errorDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 3000);
+                
+                button.textContent = originalText;
+                button.disabled = false;
+                
+            } catch (error) {
+                console.error('Error updating proposal:', error);
+                const errorDiv = document.getElementById('proposal-error');
+                errorDiv.style.color = 'var(--color-danger)';
+                errorDiv.textContent = 'Error updating proposal: ' + error.message;
+                errorDiv.style.display = 'block';
+                
+                const button = event.target.querySelector('button[type="submit"]');
+                button.textContent = 'Update Proposal';
+                button.disabled = false;
+            }
+        }
+
+        function viewProposal() {
+            window.location.href = `proposal.html?id=${currentProposalId}`;
+        }
+
+        async function initializeEdit() {
+            if (!checkAuth()) return;
+            
+            currentProposalId = getProposalId();
+            
+            if (!currentProposalId) {
+                displayError('No proposal ID provided in URL');
+                return;
+            }
+            
+            await loadProposal();
+        }
+
+        // Function to check user role and show/hide admin link
+        async function checkUserRoleForNav() {
+            try {
+                const currentUser = localStorage.getItem('loggedInUser');
+                if (!currentUser) return;
+                
+                const usersCol = firebase.firestore().collection('users');
+                const userDoc = await usersCol.doc(currentUser).get();
+                
+                if (userDoc.exists && userDoc.data().role === 'admin') {
+                    const adminLink = document.getElementById('nav-admin');
+                    if (adminLink) {
+                        adminLink.style.display = 'block';
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking user role for navigation:', error);
+            }
+        }
+        
+        // Global logout function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEdit();
+            setTimeout(checkUserRoleForNav, 1000);
+        });
+    </script>
+</body>
+</html>
